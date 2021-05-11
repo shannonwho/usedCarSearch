@@ -1,0 +1,57 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}RediSearch Autocomplete{% endblock %}
+
+{% block navbar %}
+{{ nav.top.render() }}
+{% endblock %}
+
+{% block metas %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block styles %}
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//jqueryui.com/resources/demos/style.css">
+  <style>
+  .ui-autocomplete-loading {
+    background: white url("http://jqueryui.com/resources/demos/autocomplete/images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+  </style>
+   <script src="/static/js/mainSearch.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <table class="table table-dark">
+    <h2> Available {{search}} cars for sale:  </h2>
+    <h3> Total {{numOfResult}} cars</h3>
+    <div class="row">
+      {% for value in result %}
+      <div class="col-sm-6">
+        <div class="card">
+          <img class="card-img-top" src='{{value.image_url}}' onerror="this.onerror=null; this.src='https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png'" style=width:50%;height:15vw;object-fit:cover;>
+          <div class="card-body">
+            <h4 class="card-title">{{value.year}} {{value.manufacturer}} {{value.model}} </h4>
+            <p class="card-text">Mileage: {{value.mileage}}</p>
+            <p class="card-text">Price: {{value.price}}</p>
+            <p class="card-text">Color: {{value.paint_color}}</p>
+            <p class="card-text">Transmission: {{value.transmission}}</p>
+
+            <!-- <button href="javascript:void()" id="title-link-{{value.id}}"
+                                    data-toggle="modal"
+                                    data-target="#order-detail-modal"
+                                    onclick="showOrderDetailModal('{{value.id}}');" class="btn btn-primary"> Learn more </button>
+ -->
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </table>
+</div>
+
+
+{% endblock %}

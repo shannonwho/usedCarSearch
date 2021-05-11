@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    # redis:
+    #     image: "redislabs/redisearch:latest"
+    #     ports:
+    #     - "6379:6379"
+    app:
+        build:
+            context: .
+            target: base
+        ports:
+        - 5000:5000
+        environment: 
+        - REDIS_SERVER=redis-15167.c14210.us-west1-mz.gcp.cloud.rlrcp.com
+        - REDIS_PORT=15167
+        - REDIS_PASSWORD=tp4obFGolrSQGIdywaGe0l0SHOhXWyIQ
+        volumes:
+        - .:/app
+    
+    locust_master:
+        build:
+            context: .
+            target: test
+        ports:
+        - "8089:8089"
+        environment:
+        - ENV=local
+        volumes:
+        - .:/test
+        entrypoint: locust --host=http://app:5000 --master
+        env_file: 
+        - locust/locust.conf
+        links:
+        - app:app
+    
+    locust_worker:
+        build:
+            context: .
+            target: test
+        environment:
+        - ENV=local
+        volumes:
+        - .:/test
+        entrypoint: locust --worker --master-host locust_master
+        env_file: 
+        - locust/locust.conf
+        links:
+        - app:app

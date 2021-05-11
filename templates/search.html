@@ -1,0 +1,103 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}RediSearch Autocomplete{% endblock %}
+
+{% block navbar %}
+{{ nav.top.render() }}
+{% endblock %}
+
+{% block metas %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block styles %}
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//jqueryui.com/resources/demos/style.css">
+  <style>
+  .ui-autocomplete-loading {
+    background: white url("http://jqueryui.com/resources/demos/autocomplete/images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+  </style>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+ 
+    $( "#manufacturer" ).autocomplete({
+      source: "/autocomplete",
+      minLength: 1,
+      select: function( event, ui ) {
+        log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+      }
+    });
+  } );
+  </script>
+
+  <script>
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    output.innerHTML = slider.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+    output.innerHTML = this.value; }
+  </script>
+  <script>
+    $( function() {
+      $( "#slider-range" ).slider({
+        range: true,
+        min: 1989,
+        max: 2020,
+        values: [2015, 2018],
+        slide: function( event, ui ) {
+          $( "#year" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        }
+      });
+      $( "#year" ).val( $( "#slider-range" ).slider( "values", 0 ) +
+        " - " + $( "#slider-range" ).slider( "values", 1 ) );
+    } );
+    </script>
+
+<!-- <script src="/static/js/mainSearch.js"></script> -->
+
+  {% endblock %}
+{% block content %}
+
+<div class="container">
+
+  <form action = "/display" method = "POST">
+    <div class="form-group">
+      <h2><label>Find your next ride:</label></h2>
+      <p><label for="manufacturer">Manufacturer:</label></p>
+        <input id="manufacturer" class="form-control" name="manufacturer">
+      <br><br>
+      <p><label for="price">Price range:</label></p>
+        <div class="column" style=float:left;width:50%;padding:10px;>From <input id="from" class="form-control" name="startingPrice"></div>
+        <div class="column" style=float:left;width:50%;padding:10px;>To <input id="to" class="form-control" name="endPrice"> </div>      
+      <br><br>    
+      <br><br>    
+      <p><label for="year">Year range:</label>
+        <input type="text" id="year" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        <div id="slider-range"></div>
+        <br><br>
+      
+      <p><label for="color">Color:</label></p>
+      <input id="color" class="form-control" name="color">
+  
+  
+      <p><input type = "submit" value = "submit" /></p>
+    </div>
+  </form>
+
+  <p>This is a fuzzy search so feel free to search for shveroet to get Chevrolet or jagar to get jaguar</p>
+</div>
+{% endblock %}
+
+ 

@@ -1,0 +1,116 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}RediSearch GeoSearch{% endblock %}
+
+{% block navbar %}
+{{ nav.top.render() }}
+{% endblock %}
+
+{% block metas %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block styles %}
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//jqueryui.com/resources/demos/style.css">
+{% endblock %}
+
+{% block content %}
+<head>
+  <title>Marker Clustering</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+
+  <style type="text/css">
+    /* Always set the map height explicitly to define the size of the div
+    * element that contains the map. */
+    #map {
+      height: 100%;
+      width: 40%;
+      margin-left: 20%;
+      float:left
+    }
+    #result {
+      height:100%;
+      width:20%;
+      margin-right: 17%;
+      float:right;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script>
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 6,
+        center: { lat: 37.388, lng: -122.065109},
+      });
+      // Create an array of alphabetical characters used to label the markers.
+      const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      // Add some markers to the map.
+      // Note: The code uses the JavaScript Array.prototype.map() method to
+      // create an array of markers based on a given "locations" array.
+      // The map() method here has nothing to do with the Google Maps API.
+      const markers = locations.map((location, i) => {
+        return new google.maps.Marker({
+          position: location,
+          label: labels[i % labels.length],
+        });
+      });
+      // Add a marker clusterer to manage the markers.
+      new MarkerClusterer(map, markers, {
+        imagePath:
+          "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+      });
+    }
+    const locations = [
+      {lat: 37.388013, lng: -122.065109},
+      {lat: 37.388, lng: -122.074},
+      {lat: 37.3855, lng: -122.088},
+      {lat: 37.3893, lng: -122.0783},
+      {lat: 37.3855, lng: -122.088},
+      {lat: 37.3895, lng: -122.0817}
+    ];
+
+
+    // const response = await axios.get('/geosearch');
+    // <p>response</p>
+    // let details = '';
+    // for (let [key, value] of Object.entries(response.loclist)) {
+    //     details += `<tr><td>${key}</td><td>${value}</td></tr>`;
+    // }
+  </script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="result">
+    <h3>Cars near me: </h3>
+    <div class="row">
+      {% for res in results %}
+            <div class="card-body">
+                <h5 class="card-title">ID: {{res.id}}</h5>
+                <p class="card-text">Manufacturer: {{res.manufacturer}}</p>
+                <p class="card-text">Model: {{res.model}}</p>
+                <p class="card-text">Region: {{res.region}}</p>
+                <p class="card-text">Location: {{res.location}}</p>
+                <hr>
+            </div>
+      {% endfor %}
+    </div>
+    </div>
+  <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOfcRNT4kVasr2xefiT3PV-ij-oKnyaYg&callback=initMap&libraries=&v=weekly"
+    async
+  ></script>
+</body>
+{% endblock %}
+ 
